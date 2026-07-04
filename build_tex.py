@@ -3,6 +3,7 @@
 Generates main.tex for the Solar Hijri (Jalali) 1405 wall calendar.
 """
 import sys, datetime
+from pathlib import Path
 sys.path.insert(0, '.')
 from jalali import j_to_g, days_in_jmonth
 from gen_data import (fa_num, MONTH_NAMES, MONTH_NAMES_EN, PHOTO_FILES,
@@ -177,11 +178,11 @@ PREAMBLE = r"""
 \newenvironment{monthgrid}{%
   \renewcommand{\arraystretch}{1.15}
   \setlength{\tabcolsep}{2pt}
-  \begin{tabular}{|*{7}{>{\centering\arraybackslash}p{2.75cm}|}}
+  \begin{tabularx}{\linewidth}{|*{7}{>{\centering\arraybackslash}X|}}
   \hline
 }{%
   \hline
-  \end{tabular}
+  \end{tabularx}
 }
 
 \newcommand{\holidayitem}[1]{{\small\textcolor{holidayText}{\textbullet}\ \textcolor{normalText}{\small #1}}\par\vspace{0.6mm}}
@@ -200,7 +201,9 @@ def main():
     for m in range(1, 13):
         parts.append(build_month_page(m))
     parts.append(POSTAMBLE)
-    with open('main.tex', 'w', encoding='utf-8') as f:
+    root = Path(__file__).resolve().parent
+    output = root / "main.tex"
+    with output.open("w", encoding="utf-8") as f:
         f.write("\n".join(parts))
 
 if __name__ == "__main__":
