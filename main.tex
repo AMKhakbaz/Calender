@@ -60,11 +60,11 @@
 \newenvironment{monthgrid}{%
   \renewcommand{\arraystretch}{1.15}
   \setlength{\tabcolsep}{2pt}
-  \begin{tabular}{|*{7}{>{\centering\arraybackslash}p{2.75cm}|}}
+  \begin{tabularx}{\linewidth}{|*{7}{>{\centering\arraybackslash}X|}}
   \hline
 }{%
   \hline
-  \end{tabular}
+  \end{tabularx}
 }
 
 \newcommand{\holidayitem}[1]{{\small\textcolor{holidayText}{\textbullet}\ \textcolor{normalText}{\small #1}}\par\vspace{0.6mm}}
