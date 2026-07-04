@@ -2,16 +2,30 @@
 """
 Generates main.tex for the Solar Hijri (Jalali) 1405 wall calendar.
 """
-import sys, datetime
+import sys
 from pathlib import Path
+from string import Template
 sys.path.insert(0, '.')
-from jalali import j_to_g, days_in_jmonth
+from jalali import j_to_g
 from gen_data import (fa_num, MONTH_NAMES, MONTH_NAMES_EN, PHOTO_FILES,
                        WEEKDAY_FA, HOLIDAYS, EVENTS, month_info)
 
-GREG_MONTHS_FA_ABBR = ["مارس","آوریل","مه","ژوئن","ژوئیه","اوت",
-                       "سپتامبر","اکتبر","نوامبر","دسامبر","ژانویه","فوریه"]
 GREG_MONTHS_EN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+
+# Layout and typography live here so main.tex remains a generated artifact.
+TEXT_FONT = "FreeSerif"
+LATIN_TEXT_FONT = "FreeSerif"
+TITLE_FONT = "FreeSerif"
+PAGE_MARGIN = "5mm"
+PAGE_TOP_MARGIN = "0mm"
+HERO_HEIGHT = "11cm"
+HERO_TO_GRID_SPACE = "11.2cm"
+HERO_BANNER_HEIGHT = "2.15cm"
+HERO_SIDE_PADDING = "9mm"
+MONTH_GRID_ARRAYSTRETCH = "1.15"
+MONTH_GRID_TABCOLSEP = "2pt"
+MONTH_GRID_ROW_GAP = "1mm"
+FOOTER_TOP_SPACE = "2.2mm"
 
 def rtl(text):
     """Return Persian text for xepersian-managed RTL rendering."""
@@ -69,7 +83,7 @@ def build_month_page(m):
                     cells.append(r"\fridaycell{" + fa_num(val) + "}{" + gd_str + "}")
                 else:
                     cells.append(r"\normalcell{" + fa_num(val) + "}{" + gd_str + "}")
-        rows_tex.append(" & ".join(cells) + r" \\[1mm]")
+        rows_tex.append(" & ".join(cells) + rf" \\[{MONTH_GRID_ROW_GAP}]")
 
     grid_body = "\n".join(rows_tex)
 
@@ -100,7 +114,7 @@ def build_month_page(m):
 """ + header_row + r"""
 """ + grid_body + r"""
 \end{monthgrid}
-\vspace{2.2mm}
+\vspace{""" + FOOTER_TOP_SPACE + r"""}
 \begin{tcolorbox}[colback=footerBg,colframe=footerBg,boxrule=0pt,arc=2pt,left=3mm,right=3mm,top=2mm,bottom=2mm,width=\linewidth]
 \begin{minipage}[t]{0.48\linewidth}
 {\small\bfseries\color{holidayText}""" + rtl("تعطیلات رسمی") + r"""}\par\vspace{1mm}
@@ -116,14 +130,15 @@ def build_month_page(m):
     return page
 
 
-PREAMBLE = r"""
+PREAMBLE = Template(r"""
+% این فایل به‌صورت خودکار توسط build_tex.py تولید شده است؛ تغییرات قالب را در همان فایل اعمال کنید.
 \documentclass[10pt]{article}
 \usepackage{fontspec}
 \usepackage{xepersian}
-\settextfont{FreeSerif}
-\setlatintextfont{FreeSerif}
-\newfontfamily\titlefont{FreeSerif}
-\usepackage[a4paper,margin=5mm,top=0mm,headheight=0mm]{geometry}
+\settextfont{$text_font}
+\setlatintextfont{$latin_text_font}
+\newfontfamily\titlefont{$title_font}
+\usepackage[a4paper,margin=$page_margin,top=$page_top_margin,headheight=0mm]{geometry}
 \usepackage{tikz}
 \usepackage[table]{xcolor}
 \usepackage{graphicx}
@@ -151,20 +166,20 @@ PREAMBLE = r"""
   \clearpage
   \noindent
   \begin{tikzpicture}[remember picture,overlay]
-    \def\heroheight{11cm}
+    \def\heroheight{$hero_height}
     \coordinate (heroNW) at (current page.north west);
     \coordinate (heroNE) at (current page.north east);
     \coordinate (heroSW) at ([yshift=-\heroheight]current page.north west);
     \coordinate (heroSE) at ([yshift=-\heroheight]current page.north east);
     \path[clip] (heroNW) rectangle (heroSE);
-    \node[anchor=center,inner sep=0] at ([yshift=-0.5\heroheight]current page.north) {\includegraphics[width=\paperwidth]{photos/#1}};
-    \fill[bannerDark,opacity=0.68] (heroSW) rectangle ([yshift=2.15cm]heroSE);
-    \draw[accentGold,line width=0.9pt] ([yshift=2.15cm]heroSW) -- ([yshift=2.15cm]heroSE);
-    \node[anchor=south west,text=white,inner sep=0] at ([xshift=9mm,yshift=0.68cm]heroSW) {\titlefont\fontsize{36}{40}\selectfont #2};
-    \node[anchor=south east,text=accentGold,inner sep=0] at ([xshift=-9mm,yshift=0.78cm]heroSE) {\fontsize{12}{14}\selectfont #4};
-    \node[anchor=north west,text=accentGold,inner sep=0] at ([xshift=9mm,yshift=-5mm]heroNW) {\fontsize{14}{16}\selectfont تقویم سال ۱۴۰۵};
+    \node[anchor=center,inner sep=0] at ([yshift=-0.5\heroheight]current page.north) {\includegraphics[width=\paperwidth,height=\heroheight,keepaspectratio]{photos/#1}};
+    \fill[bannerDark,opacity=0.68] (heroSW) rectangle ([yshift=$hero_banner_height]heroSE);
+    \draw[accentGold,line width=0.9pt] ([yshift=$hero_banner_height]heroSW) -- ([yshift=$hero_banner_height]heroSE);
+    \node[anchor=south west,text=white,inner sep=0] at ([xshift=$hero_side_padding,yshift=0.68cm]heroSW) {\titlefont\fontsize{36}{40}\selectfont #2};
+    \node[anchor=south east,text=accentGold,inner sep=0] at ([xshift=-$hero_side_padding,yshift=0.78cm]heroSE) {\fontsize{12}{14}\selectfont #4};
+    \node[anchor=north west,text=accentGold,inner sep=0] at ([xshift=$hero_side_padding,yshift=-5mm]heroNW) {\fontsize{14}{16}\selectfont تقویم سال ۱۴۰۵};
   \end{tikzpicture}%
-  \vspace*{11.2cm}
+  \vspace*{$hero_to_grid_space}
 }{%
 }
 
@@ -176,8 +191,8 @@ PREAMBLE = r"""
 \newcommand{\daynumcolor}[1]{\textcolor{normalText}{#1}}
 
 \newenvironment{monthgrid}{%
-  \renewcommand{\arraystretch}{1.15}
-  \setlength{\tabcolsep}{2pt}
+  \renewcommand{\arraystretch}{$month_grid_arraystretch}
+  \setlength{\tabcolsep}{$month_grid_tabcolsep}
   \begin{tabularx}{\linewidth}{|*{7}{>{\centering\arraybackslash}X|}}
   \hline
 }{%
@@ -190,7 +205,19 @@ PREAMBLE = r"""
 \newcommand{\noholidaynote}[1]{{\small\color{gray} این ماه فاقد تعطیلی رسمی است.}}
 
 \begin{document}
-"""
+""").substitute(
+    text_font=TEXT_FONT,
+    latin_text_font=LATIN_TEXT_FONT,
+    title_font=TITLE_FONT,
+    page_margin=PAGE_MARGIN,
+    page_top_margin=PAGE_TOP_MARGIN,
+    hero_height=HERO_HEIGHT,
+    hero_to_grid_space=HERO_TO_GRID_SPACE,
+    hero_banner_height=HERO_BANNER_HEIGHT,
+    hero_side_padding=HERO_SIDE_PADDING,
+    month_grid_arraystretch=MONTH_GRID_ARRAYSTRETCH,
+    month_grid_tabcolsep=MONTH_GRID_TABCOLSEP,
+)
 
 POSTAMBLE = r"""
 \end{document}
