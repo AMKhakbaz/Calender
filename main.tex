@@ -1,0 +1,420 @@
+
+\documentclass[10pt]{article}
+\usepackage{fontspec}
+\usepackage[a4paper,margin=9mm,top=0mm,headheight=0mm]{geometry}
+\usepackage{tikz}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage[most]{tcolorbox}
+\usetikzlibrary{calc}
+
+\setmainfont{FreeSerif}
+\newfontfamily\titlefont{FreeSerif}
+\TeXXeTstate=1
+
+\definecolor{holidayBg}{RGB}{255,214,222}
+\definecolor{holidayText}{RGB}{176,32,60}
+\definecolor{fridayText}{RGB}{198,60,80}
+\definecolor{normalText}{RGB}{45,45,50}
+\definecolor{gridLine}{RGB}{225,225,228}
+\definecolor{bannerDark}{RGB}{20,22,30}
+\definecolor{accentGold}{RGB}{182,148,84}
+\definecolor{footerBg}{RGB}{247,246,243}
+\definecolor{headerBg}{RGB}{35,38,48}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+% ---------- Calendar page environment ----------
+% #1 photo filename  #2 persian month name (rtl-wrapped)  #3 persian numeral of month  #4 gregorian range
+\newenvironment{calendarpage}[4]{%
+  \clearpage
+  \noindent
+  \begin{tikzpicture}[remember picture]
+    \useasboundingbox (0,0) rectangle (\linewidth,7.6cm);
+    \clip (0,0) rectangle (\linewidth,7.6cm);
+    \node[anchor=center,inner sep=0] at ($(\linewidth/2,3.8cm)$) {\includegraphics[width=\linewidth]{photos/#1}};
+    \fill[bannerDark,opacity=0.68] (0,0) rectangle (\linewidth,1.85cm);
+    \draw[accentGold,line width=0.9pt] (0,1.85cm) -- (\linewidth,1.85cm);
+    \node[anchor=south west,text=white,inner sep=0] at (0.35cm,0.55cm) {\titlefont\fontsize{30}{34}\selectfont #2};
+    \node[anchor=south east,text=accentGold,inner sep=0] at ($(\linewidth-0.35cm,0.62cm)$) {\fontsize{11}{13}\selectfont #4};
+    \node[anchor=north west,text=accentGold,inner sep=0] at (0.35cm,7.35cm) {\fontsize{13}{15}\selectfont \beginR تقویم سال ۱۴۰۵\endR};
+  \end{tikzpicture}\\[2mm]
+}{%
+}
+
+\newcommand{\headercell}[1]{\multicolumn{1}{c}{\cellcolor{headerBg}\textcolor{white}{\small #1}}}
+\newcommand{\normalcell}[2]{\begin{tabular}{@{}c@{}}\daynumcolor{#1}\\[-0.7mm]{\tiny\color{gray!70}#2}\end{tabular}}
+\newcommand{\fridaycell}[2]{\begin{tabular}{@{}c@{}}\textcolor{fridayText}{\bfseries #1}\\[-0.7mm]{\tiny\color{fridayText!70}#2}\end{tabular}}
+\newcommand{\holidaycell}[2]{\cellcolor{holidayBg}\begin{tabular}{@{}c@{}}\textcolor{holidayText}{\bfseries #1}\\[-0.7mm]{\tiny\color{holidayText!80}#2}\end{tabular}}
+\newcommand{\emptycell}{\phantom{0}}
+\newcommand{\daynumcolor}[1]{\textcolor{normalText}{#1}}
+
+\newenvironment{monthgrid}{%
+  \renewcommand{\arraystretch}{1.15}
+  \setlength{\tabcolsep}{2pt}
+  \begin{tabular}{|*{7}{>{\centering\arraybackslash}p{2.52cm}|}}
+  \hline
+}{%
+  \hline
+  \end{tabular}
+}
+
+\newcommand{\holidayitem}[1]{{\small\textcolor{holidayText}{\textbullet}\ \textcolor{normalText}{\small #1}}\par\vspace{0.6mm}}
+\newcommand{\eventitem}[1]{{\small\textcolor{accentGold}{\textbullet}\ \textcolor{normalText}{\small #1}}\par\vspace{0.6mm}}
+\newcommand{\noholidaynote}[1]{{\small\color{gray} }\beginR این ماه فاقد تعطیلی رسمی است.\endR }
+
+\begin{document}
+
+
+%%============================================================
+%% Farvardin
+%%============================================================
+\begin{calendarpage}{1-Farvardin.jpg}{\beginR فروردین\endR }{۱}{21 Mar 2026 \textendash\ 20 Apr 2026}
+\begin{monthgrid}
+\headercell{\beginR جمعه\endR } & \headercell{\beginR پنج‌شنبه\endR } & \headercell{\beginR چهارشنبه\endR } & \headercell{\beginR سه‌شنبه\endR } & \headercell{\beginR دوشنبه\endR } & \headercell{\beginR یک‌شنبه\endR } & \headercell{\beginR شنبه\endR } \\ \hline
+\fridaycell{۷}{27} & \normalcell{۶}{26} & \normalcell{۵}{25} & \holidaycell{۴}{24} & \holidaycell{۳}{23} & \holidaycell{۲}{22} & \holidaycell{۱}{21} \\[1mm]
+\fridaycell{۱۴}{3} & \holidaycell{۱۳}{2} & \holidaycell{۱۲}{1} & \normalcell{۱۱}{31} & \normalcell{۱۰}{30} & \normalcell{۹}{29} & \normalcell{۸}{28} \\[1mm]
+\fridaycell{۲۱}{10} & \normalcell{۲۰}{9} & \normalcell{۱۹}{8} & \normalcell{۱۸}{7} & \normalcell{۱۷}{6} & \normalcell{۱۶}{5} & \normalcell{۱۵}{4} \\[1mm]
+\fridaycell{۲۸}{17} & \normalcell{۲۷}{16} & \normalcell{۲۶}{15} & \holidaycell{۲۵}{14} & \normalcell{۲۴}{13} & \normalcell{۲۳}{12} & \normalcell{۲۲}{11} \\[1mm]
+\emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \normalcell{۳۱}{20} & \normalcell{۳۰}{19} & \normalcell{۲۹}{18} \\[1mm]
+\end{monthgrid}
+\vspace{2.2mm}
+\begin{tcolorbox}[colback=footerBg,colframe=footerBg,boxrule=0pt,arc=2pt,left=3mm,right=3mm,top=2mm,bottom=2mm,width=\linewidth]
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{holidayText}\beginR تعطیلات رسمی\endR }\par\vspace{1mm}
+\holidayitem{\beginR ۱ فروردین — نوروز و عید سعید فطر\endR }
+\holidayitem{\beginR ۲ فروردین — عید نوروز\endR }
+\holidayitem{\beginR ۳ فروردین — عید نوروز\endR }
+\holidayitem{\beginR ۴ فروردین — عید نوروز\endR }
+\holidayitem{\beginR ۱۲ فروردین — روز جمهوری اسلامی ایران\endR }
+\holidayitem{\beginR ۱۳ فروردین — روز طبیعت (سیزده‌به‌در)\endR }
+\holidayitem{\beginR ۲۵ فروردین — شهادت امام جعفر صادق (ع)\endR }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{accentGold}\beginR رویدادها و مناسبت‌ها\endR }\par\vspace{1mm}
+\eventitem{\beginR ۶ فروردین — زادروز زرتشت پیامبر\endR }
+\eventitem{\beginR ۲۰ فروردین — روز ملی فناوری هسته‌ای\endR }
+\eventitem{\beginR ۳۰ فروردین — روز دختران\endR }
+\end{minipage}
+\end{tcolorbox}
+\end{calendarpage}
+
+
+%%============================================================
+%% Ordibehesht
+%%============================================================
+\begin{calendarpage}{2-Ordibehesht.jpg}{\beginR اردیبهشت\endR }{۲}{21 Apr 2026 \textendash\ 21 May 2026}
+\begin{monthgrid}
+\headercell{\beginR جمعه\endR } & \headercell{\beginR پنج‌شنبه\endR } & \headercell{\beginR چهارشنبه\endR } & \headercell{\beginR سه‌شنبه\endR } & \headercell{\beginR دوشنبه\endR } & \headercell{\beginR یک‌شنبه\endR } & \headercell{\beginR شنبه\endR } \\ \hline
+\fridaycell{۴}{24} & \normalcell{۳}{23} & \normalcell{۲}{22} & \normalcell{۱}{21} & \emptycell{} & \emptycell{} & \emptycell{} \\[1mm]
+\fridaycell{۱۱}{1} & \normalcell{۱۰}{30} & \normalcell{۹}{29} & \normalcell{۸}{28} & \normalcell{۷}{27} & \normalcell{۶}{26} & \normalcell{۵}{25} \\[1mm]
+\fridaycell{۱۸}{8} & \normalcell{۱۷}{7} & \normalcell{۱۶}{6} & \normalcell{۱۵}{5} & \normalcell{۱۴}{4} & \normalcell{۱۳}{3} & \normalcell{۱۲}{2} \\[1mm]
+\fridaycell{۲۵}{15} & \normalcell{۲۴}{14} & \normalcell{۲۳}{13} & \normalcell{۲۲}{12} & \normalcell{۲۱}{11} & \normalcell{۲۰}{10} & \normalcell{۱۹}{9} \\[1mm]
+\emptycell{} & \normalcell{۳۱}{21} & \normalcell{۳۰}{20} & \normalcell{۲۹}{19} & \normalcell{۲۸}{18} & \normalcell{۲۷}{17} & \normalcell{۲۶}{16} \\[1mm]
+\end{monthgrid}
+\vspace{2.2mm}
+\begin{tcolorbox}[colback=footerBg,colframe=footerBg,boxrule=0pt,arc=2pt,left=3mm,right=3mm,top=2mm,bottom=2mm,width=\linewidth]
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{holidayText}\beginR تعطیلات رسمی\endR }\par\vspace{1mm}
+\noholidaynote{}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{accentGold}\beginR رویدادها و مناسبت‌ها\endR }\par\vspace{1mm}
+\eventitem{\beginR ۱ اردیبهشت — بزرگداشت سعدی - روز نثر فارسی\endR }
+\eventitem{\beginR ۱۰ اردیبهشت — روز ملی خلیج فارس\endR }
+\eventitem{\beginR ۱۲ اردیبهشت — روز معلم\endR }
+\eventitem{\beginR ۲۵ اردیبهشت — بزرگداشت فردوسی - روز پاسداشت زبان فارسی\endR }
+\end{minipage}
+\end{tcolorbox}
+\end{calendarpage}
+
+
+%%============================================================
+%% Khordad
+%%============================================================
+\begin{calendarpage}{3-Khordad.jpg}{\beginR خرداد\endR }{۳}{22 May 2026 \textendash\ 21 Jun 2026}
+\begin{monthgrid}
+\headercell{\beginR جمعه\endR } & \headercell{\beginR پنج‌شنبه\endR } & \headercell{\beginR چهارشنبه\endR } & \headercell{\beginR سه‌شنبه\endR } & \headercell{\beginR دوشنبه\endR } & \headercell{\beginR یک‌شنبه\endR } & \headercell{\beginR شنبه\endR } \\ \hline
+\fridaycell{۱}{22} & \emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} \\[1mm]
+\fridaycell{۸}{29} & \normalcell{۷}{28} & \holidaycell{۶}{27} & \normalcell{۵}{26} & \normalcell{۴}{25} & \normalcell{۳}{24} & \normalcell{۲}{23} \\[1mm]
+\holidaycell{۱۵}{5} & \holidaycell{۱۴}{4} & \normalcell{۱۳}{3} & \normalcell{۱۲}{2} & \normalcell{۱۱}{1} & \normalcell{۱۰}{31} & \normalcell{۹}{30} \\[1mm]
+\fridaycell{۲۲}{12} & \normalcell{۲۱}{11} & \normalcell{۲۰}{10} & \normalcell{۱۹}{9} & \normalcell{۱۸}{8} & \normalcell{۱۷}{7} & \normalcell{۱۶}{6} \\[1mm]
+\fridaycell{۲۹}{19} & \normalcell{۲۸}{18} & \normalcell{۲۷}{17} & \normalcell{۲۶}{16} & \normalcell{۲۵}{15} & \normalcell{۲۴}{14} & \normalcell{۲۳}{13} \\[1mm]
+\emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \normalcell{۳۱}{21} & \normalcell{۳۰}{20} \\[1mm]
+\end{monthgrid}
+\vspace{2.2mm}
+\begin{tcolorbox}[colback=footerBg,colframe=footerBg,boxrule=0pt,arc=2pt,left=3mm,right=3mm,top=2mm,bottom=2mm,width=\linewidth]
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{holidayText}\beginR تعطیلات رسمی\endR }\par\vspace{1mm}
+\holidayitem{\beginR ۶ خرداد — عید سعید قربان\endR }
+\holidayitem{\beginR ۱۴ خرداد — عید غدیر خم و رحلت امام خمینی (ره)\endR }
+\holidayitem{\beginR ۱۵ خرداد — قیام ۱۵ خرداد\endR }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{accentGold}\beginR رویدادها و مناسبت‌ها\endR }\par\vspace{1mm}
+\eventitem{\beginR ۳ خرداد — سالروز فتح خرمشهر\endR }
+\eventitem{\beginR ۲۶ خرداد — آغاز سال نو قمری\endR }
+\end{minipage}
+\end{tcolorbox}
+\end{calendarpage}
+
+
+%%============================================================
+%% Tir
+%%============================================================
+\begin{calendarpage}{4-Tir.jpg}{\beginR تیر\endR }{۴}{22 Jun 2026 \textendash\ 22 Jul 2026}
+\begin{monthgrid}
+\headercell{\beginR جمعه\endR } & \headercell{\beginR پنج‌شنبه\endR } & \headercell{\beginR چهارشنبه\endR } & \headercell{\beginR سه‌شنبه\endR } & \headercell{\beginR دوشنبه\endR } & \headercell{\beginR یک‌شنبه\endR } & \headercell{\beginR شنبه\endR } \\ \hline
+\fridaycell{۵}{26} & \holidaycell{۴}{25} & \holidaycell{۳}{24} & \normalcell{۲}{23} & \normalcell{۱}{22} & \emptycell{} & \emptycell{} \\[1mm]
+\fridaycell{۱۲}{3} & \normalcell{۱۱}{2} & \normalcell{۱۰}{1} & \normalcell{۹}{30} & \normalcell{۸}{29} & \normalcell{۷}{28} & \normalcell{۶}{27} \\[1mm]
+\fridaycell{۱۹}{10} & \normalcell{۱۸}{9} & \normalcell{۱۷}{8} & \normalcell{۱۶}{7} & \normalcell{۱۵}{6} & \normalcell{۱۴}{5} & \normalcell{۱۳}{4} \\[1mm]
+\fridaycell{۲۶}{17} & \normalcell{۲۵}{16} & \normalcell{۲۴}{15} & \normalcell{۲۳}{14} & \normalcell{۲۲}{13} & \normalcell{۲۱}{12} & \normalcell{۲۰}{11} \\[1mm]
+\emptycell{} & \emptycell{} & \normalcell{۳۱}{22} & \normalcell{۳۰}{21} & \normalcell{۲۹}{20} & \normalcell{۲۸}{19} & \normalcell{۲۷}{18} \\[1mm]
+\end{monthgrid}
+\vspace{2.2mm}
+\begin{tcolorbox}[colback=footerBg,colframe=footerBg,boxrule=0pt,arc=2pt,left=3mm,right=3mm,top=2mm,bottom=2mm,width=\linewidth]
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{holidayText}\beginR تعطیلات رسمی\endR }\par\vspace{1mm}
+\holidayitem{\beginR ۳ تیر — تاسوعای حسینی\endR }
+\holidayitem{\beginR ۴ تیر — عاشورای حسینی\endR }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{accentGold}\beginR رویدادها و مناسبت‌ها\endR }\par\vspace{1mm}
+\eventitem{\beginR ۷ تیر — روز قوه قضاییه\endR }
+\eventitem{\beginR ۱۴ تیر — روز قلم\endR }
+\eventitem{\beginR ۲۲ تیر — روز ملی فناوری اطلاعات\endR }
+\end{minipage}
+\end{tcolorbox}
+\end{calendarpage}
+
+
+%%============================================================
+%% Mordad
+%%============================================================
+\begin{calendarpage}{5-Mordad.jpg}{\beginR مرداد\endR }{۵}{23 Jul 2026 \textendash\ 22 Aug 2026}
+\begin{monthgrid}
+\headercell{\beginR جمعه\endR } & \headercell{\beginR پنج‌شنبه\endR } & \headercell{\beginR چهارشنبه\endR } & \headercell{\beginR سه‌شنبه\endR } & \headercell{\beginR دوشنبه\endR } & \headercell{\beginR یک‌شنبه\endR } & \headercell{\beginR شنبه\endR } \\ \hline
+\fridaycell{۲}{24} & \normalcell{۱}{23} & \emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} \\[1mm]
+\fridaycell{۹}{31} & \normalcell{۸}{30} & \normalcell{۷}{29} & \normalcell{۶}{28} & \normalcell{۵}{27} & \normalcell{۴}{26} & \normalcell{۳}{25} \\[1mm]
+\fridaycell{۱۶}{7} & \normalcell{۱۵}{6} & \normalcell{۱۴}{5} & \holidaycell{۱۳}{4} & \normalcell{۱۲}{3} & \normalcell{۱۱}{2} & \normalcell{۱۰}{1} \\[1mm]
+\fridaycell{۲۳}{14} & \holidaycell{۲۲}{13} & \holidaycell{۲۱}{12} & \normalcell{۲۰}{11} & \normalcell{۱۹}{10} & \normalcell{۱۸}{9} & \normalcell{۱۷}{8} \\[1mm]
+\holidaycell{۳۰}{21} & \normalcell{۲۹}{20} & \normalcell{۲۸}{19} & \normalcell{۲۷}{18} & \normalcell{۲۶}{17} & \normalcell{۲۵}{16} & \normalcell{۲۴}{15} \\[1mm]
+\emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \normalcell{۳۱}{22} \\[1mm]
+\end{monthgrid}
+\vspace{2.2mm}
+\begin{tcolorbox}[colback=footerBg,colframe=footerBg,boxrule=0pt,arc=2pt,left=3mm,right=3mm,top=2mm,bottom=2mm,width=\linewidth]
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{holidayText}\beginR تعطیلات رسمی\endR }\par\vspace{1mm}
+\holidayitem{\beginR ۱۳ مرداد — اربعین حسینی\endR }
+\holidayitem{\beginR ۲۱ مرداد — رحلت رسول اکرم (ص) و شهادت امام حسن مجتبی (ع)\endR }
+\holidayitem{\beginR ۲۲ مرداد — شهادت امام رضا (ع)\endR }
+\holidayitem{\beginR ۳۰ مرداد — شهادت امام حسن عسکری (ع)\endR }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{accentGold}\beginR رویدادها و مناسبت‌ها\endR }\par\vspace{1mm}
+\eventitem{\beginR ۱۴ مرداد — سالروز صدور فرمان مشروطیت\endR }
+\eventitem{\beginR ۱۷ مرداد — روز خبرنگار\endR }
+\eventitem{\beginR ۲۸ مرداد — روز جهانی عکاسی\endR }
+\end{minipage}
+\end{tcolorbox}
+\end{calendarpage}
+
+
+%%============================================================
+%% Shahrivar
+%%============================================================
+\begin{calendarpage}{6-Shahrivar.jpg}{\beginR شهریور\endR }{۶}{23 Aug 2026 \textendash\ 22 Sep 2026}
+\begin{monthgrid}
+\headercell{\beginR جمعه\endR } & \headercell{\beginR پنج‌شنبه\endR } & \headercell{\beginR چهارشنبه\endR } & \headercell{\beginR سه‌شنبه\endR } & \headercell{\beginR دوشنبه\endR } & \headercell{\beginR یک‌شنبه\endR } & \headercell{\beginR شنبه\endR } \\ \hline
+\fridaycell{۶}{28} & \normalcell{۵}{27} & \normalcell{۴}{26} & \normalcell{۳}{25} & \normalcell{۲}{24} & \normalcell{۱}{23} & \emptycell{} \\[1mm]
+\fridaycell{۱۳}{4} & \normalcell{۱۲}{3} & \normalcell{۱۱}{2} & \normalcell{۱۰}{1} & \normalcell{۹}{31} & \holidaycell{۸}{30} & \normalcell{۷}{29} \\[1mm]
+\fridaycell{۲۰}{11} & \normalcell{۱۹}{10} & \normalcell{۱۸}{9} & \normalcell{۱۷}{8} & \normalcell{۱۶}{7} & \normalcell{۱۵}{6} & \normalcell{۱۴}{5} \\[1mm]
+\fridaycell{۲۷}{18} & \normalcell{۲۶}{17} & \normalcell{۲۵}{16} & \normalcell{۲۴}{15} & \normalcell{۲۳}{14} & \normalcell{۲۲}{13} & \normalcell{۲۱}{12} \\[1mm]
+\emptycell{} & \emptycell{} & \emptycell{} & \normalcell{۳۱}{22} & \normalcell{۳۰}{21} & \normalcell{۲۹}{20} & \normalcell{۲۸}{19} \\[1mm]
+\end{monthgrid}
+\vspace{2.2mm}
+\begin{tcolorbox}[colback=footerBg,colframe=footerBg,boxrule=0pt,arc=2pt,left=3mm,right=3mm,top=2mm,bottom=2mm,width=\linewidth]
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{holidayText}\beginR تعطیلات رسمی\endR }\par\vspace{1mm}
+\holidayitem{\beginR ۸ شهریور — میلاد رسول اکرم (ص) و امام جعفر صادق (ع)\endR }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{accentGold}\beginR رویدادها و مناسبت‌ها\endR }\par\vspace{1mm}
+\eventitem{\beginR ۱ شهریور — روز پزشک - بزرگداشت ابوعلی‌سینا\endR }
+\eventitem{\beginR ۴ شهریور — زادروز کوروش بزرگ - جشن شهریورگان\endR }
+\end{minipage}
+\end{tcolorbox}
+\end{calendarpage}
+
+
+%%============================================================
+%% Mehr
+%%============================================================
+\begin{calendarpage}{7-Mehr.jpg}{\beginR مهر\endR }{۷}{23 Sep 2026 \textendash\ 22 Oct 2026}
+\begin{monthgrid}
+\headercell{\beginR جمعه\endR } & \headercell{\beginR پنج‌شنبه\endR } & \headercell{\beginR چهارشنبه\endR } & \headercell{\beginR سه‌شنبه\endR } & \headercell{\beginR دوشنبه\endR } & \headercell{\beginR یک‌شنبه\endR } & \headercell{\beginR شنبه\endR } \\ \hline
+\fridaycell{۳}{25} & \normalcell{۲}{24} & \normalcell{۱}{23} & \emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} \\[1mm]
+\fridaycell{۱۰}{2} & \normalcell{۹}{1} & \normalcell{۸}{30} & \normalcell{۷}{29} & \normalcell{۶}{28} & \normalcell{۵}{27} & \normalcell{۴}{26} \\[1mm]
+\fridaycell{۱۷}{9} & \normalcell{۱۶}{8} & \normalcell{۱۵}{7} & \normalcell{۱۴}{6} & \normalcell{۱۳}{5} & \normalcell{۱۲}{4} & \normalcell{۱۱}{3} \\[1mm]
+\fridaycell{۲۴}{16} & \normalcell{۲۳}{15} & \normalcell{۲۲}{14} & \normalcell{۲۱}{13} & \normalcell{۲۰}{12} & \normalcell{۱۹}{11} & \normalcell{۱۸}{10} \\[1mm]
+\emptycell{} & \normalcell{۳۰}{22} & \normalcell{۲۹}{21} & \normalcell{۲۸}{20} & \normalcell{۲۷}{19} & \normalcell{۲۶}{18} & \normalcell{۲۵}{17} \\[1mm]
+\end{monthgrid}
+\vspace{2.2mm}
+\begin{tcolorbox}[colback=footerBg,colframe=footerBg,boxrule=0pt,arc=2pt,left=3mm,right=3mm,top=2mm,bottom=2mm,width=\linewidth]
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{holidayText}\beginR تعطیلات رسمی\endR }\par\vspace{1mm}
+\noholidaynote{}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{accentGold}\beginR رویدادها و مناسبت‌ها\endR }\par\vspace{1mm}
+\eventitem{\beginR ۱ مهر — بازگشایی مدارس\endR }
+\end{minipage}
+\end{tcolorbox}
+\end{calendarpage}
+
+
+%%============================================================
+%% Aban
+%%============================================================
+\begin{calendarpage}{8-Aban.jpg}{\beginR آبان\endR }{۸}{23 Oct 2026 \textendash\ 21 Nov 2026}
+\begin{monthgrid}
+\headercell{\beginR جمعه\endR } & \headercell{\beginR پنج‌شنبه\endR } & \headercell{\beginR چهارشنبه\endR } & \headercell{\beginR سه‌شنبه\endR } & \headercell{\beginR دوشنبه\endR } & \headercell{\beginR یک‌شنبه\endR } & \headercell{\beginR شنبه\endR } \\ \hline
+\fridaycell{۱}{23} & \emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} \\[1mm]
+\fridaycell{۸}{30} & \normalcell{۷}{29} & \normalcell{۶}{28} & \normalcell{۵}{27} & \normalcell{۴}{26} & \normalcell{۳}{25} & \normalcell{۲}{24} \\[1mm]
+\fridaycell{۱۵}{6} & \normalcell{۱۴}{5} & \normalcell{۱۳}{4} & \normalcell{۱۲}{3} & \normalcell{۱۱}{2} & \normalcell{۱۰}{1} & \normalcell{۹}{31} \\[1mm]
+\holidaycell{۲۲}{13} & \normalcell{۲۱}{12} & \normalcell{۲۰}{11} & \normalcell{۱۹}{10} & \normalcell{۱۸}{9} & \normalcell{۱۷}{8} & \normalcell{۱۶}{7} \\[1mm]
+\fridaycell{۲۹}{20} & \normalcell{۲۸}{19} & \normalcell{۲۷}{18} & \normalcell{۲۶}{17} & \normalcell{۲۵}{16} & \normalcell{۲۴}{15} & \normalcell{۲۳}{14} \\[1mm]
+\emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \normalcell{۳۰}{21} \\[1mm]
+\end{monthgrid}
+\vspace{2.2mm}
+\begin{tcolorbox}[colback=footerBg,colframe=footerBg,boxrule=0pt,arc=2pt,left=3mm,right=3mm,top=2mm,bottom=2mm,width=\linewidth]
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{holidayText}\beginR تعطیلات رسمی\endR }\par\vspace{1mm}
+\holidayitem{\beginR ۲۲ آبان — شهادت حضرت فاطمه زهرا (س)\endR }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{accentGold}\beginR رویدادها و مناسبت‌ها\endR }\par\vspace{1mm}
+\eventitem{\beginR ۱ آبان — بزرگداشت ابوالفضل بیهقی\endR }
+\end{minipage}
+\end{tcolorbox}
+\end{calendarpage}
+
+
+%%============================================================
+%% Azar
+%%============================================================
+\begin{calendarpage}{9-Azar.jpg}{\beginR آذر\endR }{۹}{22 Nov 2026 \textendash\ 21 Dec 2026}
+\begin{monthgrid}
+\headercell{\beginR جمعه\endR } & \headercell{\beginR پنج‌شنبه\endR } & \headercell{\beginR چهارشنبه\endR } & \headercell{\beginR سه‌شنبه\endR } & \headercell{\beginR دوشنبه\endR } & \headercell{\beginR یک‌شنبه\endR } & \headercell{\beginR شنبه\endR } \\ \hline
+\fridaycell{۶}{27} & \normalcell{۵}{26} & \normalcell{۴}{25} & \normalcell{۳}{24} & \normalcell{۲}{23} & \normalcell{۱}{22} & \emptycell{} \\[1mm]
+\fridaycell{۱۳}{4} & \normalcell{۱۲}{3} & \normalcell{۱۱}{2} & \normalcell{۱۰}{1} & \normalcell{۹}{30} & \normalcell{۸}{29} & \normalcell{۷}{28} \\[1mm]
+\fridaycell{۲۰}{11} & \normalcell{۱۹}{10} & \normalcell{۱۸}{9} & \normalcell{۱۷}{8} & \normalcell{۱۶}{7} & \normalcell{۱۵}{6} & \normalcell{۱۴}{5} \\[1mm]
+\fridaycell{۲۷}{18} & \normalcell{۲۶}{17} & \normalcell{۲۵}{16} & \normalcell{۲۴}{15} & \normalcell{۲۳}{14} & \normalcell{۲۲}{13} & \normalcell{۲۱}{12} \\[1mm]
+\emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \normalcell{۳۰}{21} & \normalcell{۲۹}{20} & \normalcell{۲۸}{19} \\[1mm]
+\end{monthgrid}
+\vspace{2.2mm}
+\begin{tcolorbox}[colback=footerBg,colframe=footerBg,boxrule=0pt,arc=2pt,left=3mm,right=3mm,top=2mm,bottom=2mm,width=\linewidth]
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{holidayText}\beginR تعطیلات رسمی\endR }\par\vspace{1mm}
+\noholidaynote{}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{accentGold}\beginR رویدادها و مناسبت‌ها\endR }\par\vspace{1mm}
+\eventitem{\beginR ۱ آذر — روز بیمه\endR }
+\eventitem{\beginR ۵ آذر — روز بسیج\endR }
+\eventitem{\beginR ۱۶ آذر — روز دانشجو\endR }
+\end{minipage}
+\end{tcolorbox}
+\end{calendarpage}
+
+
+%%============================================================
+%% Dey
+%%============================================================
+\begin{calendarpage}{10-Dey.jpg}{\beginR دی\endR }{۱۰}{22 Dec 2026 \textendash\ 20 Jan 2027}
+\begin{monthgrid}
+\headercell{\beginR جمعه\endR } & \headercell{\beginR پنج‌شنبه\endR } & \headercell{\beginR چهارشنبه\endR } & \headercell{\beginR سه‌شنبه\endR } & \headercell{\beginR دوشنبه\endR } & \headercell{\beginR یک‌شنبه\endR } & \headercell{\beginR شنبه\endR } \\ \hline
+\fridaycell{۴}{25} & \normalcell{۳}{24} & \holidaycell{۲}{23} & \normalcell{۱}{22} & \emptycell{} & \emptycell{} & \emptycell{} \\[1mm]
+\fridaycell{۱۱}{1} & \normalcell{۱۰}{31} & \normalcell{۹}{30} & \normalcell{۸}{29} & \normalcell{۷}{28} & \normalcell{۶}{27} & \normalcell{۵}{26} \\[1mm]
+\fridaycell{۱۸}{8} & \normalcell{۱۷}{7} & \holidaycell{۱۶}{6} & \normalcell{۱۵}{5} & \normalcell{۱۴}{4} & \normalcell{۱۳}{3} & \normalcell{۱۲}{2} \\[1mm]
+\fridaycell{۲۵}{15} & \normalcell{۲۴}{14} & \normalcell{۲۳}{13} & \normalcell{۲۲}{12} & \normalcell{۲۱}{11} & \normalcell{۲۰}{10} & \normalcell{۱۹}{9} \\[1mm]
+\emptycell{} & \emptycell{} & \normalcell{۳۰}{20} & \normalcell{۲۹}{19} & \normalcell{۲۸}{18} & \normalcell{۲۷}{17} & \normalcell{۲۶}{16} \\[1mm]
+\end{monthgrid}
+\vspace{2.2mm}
+\begin{tcolorbox}[colback=footerBg,colframe=footerBg,boxrule=0pt,arc=2pt,left=3mm,right=3mm,top=2mm,bottom=2mm,width=\linewidth]
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{holidayText}\beginR تعطیلات رسمی\endR }\par\vspace{1mm}
+\holidayitem{\beginR ۲ دی — ولادت امام علی (ع) - روز پدر\endR }
+\holidayitem{\beginR ۱۶ دی — مبعث رسول اکرم (ص)\endR }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{accentGold}\beginR رویدادها و مناسبت‌ها\endR }\par\vspace{1mm}
+\eventitem{\beginR ۱۱ دی — آغاز سال نو میلادی\endR }
+\eventitem{\beginR ۱۳ دی — سالروز شهادت سردار سلیمانی - روز مقاومت جهانی\endR }
+\end{minipage}
+\end{tcolorbox}
+\end{calendarpage}
+
+
+%%============================================================
+%% Bahman
+%%============================================================
+\begin{calendarpage}{11-Bahman.jpg}{\beginR بهمن\endR }{۱۱}{21 Jan 2027 \textendash\ 19 Feb 2027}
+\begin{monthgrid}
+\headercell{\beginR جمعه\endR } & \headercell{\beginR پنج‌شنبه\endR } & \headercell{\beginR چهارشنبه\endR } & \headercell{\beginR سه‌شنبه\endR } & \headercell{\beginR دوشنبه\endR } & \headercell{\beginR یک‌شنبه\endR } & \headercell{\beginR شنبه\endR } \\ \hline
+\fridaycell{۲}{22} & \normalcell{۱}{21} & \emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} \\[1mm]
+\fridaycell{۹}{29} & \normalcell{۸}{28} & \normalcell{۷}{27} & \normalcell{۶}{26} & \normalcell{۵}{25} & \holidaycell{۴}{24} & \normalcell{۳}{23} \\[1mm]
+\fridaycell{۱۶}{5} & \normalcell{۱۵}{4} & \normalcell{۱۴}{3} & \normalcell{۱۳}{2} & \normalcell{۱۲}{1} & \normalcell{۱۱}{31} & \normalcell{۱۰}{30} \\[1mm]
+\fridaycell{۲۳}{12} & \holidaycell{۲۲}{11} & \normalcell{۲۱}{10} & \normalcell{۲۰}{9} & \normalcell{۱۹}{8} & \normalcell{۱۸}{7} & \normalcell{۱۷}{6} \\[1mm]
+\fridaycell{۳۰}{19} & \normalcell{۲۹}{18} & \normalcell{۲۸}{17} & \normalcell{۲۷}{16} & \normalcell{۲۶}{15} & \normalcell{۲۵}{14} & \normalcell{۲۴}{13} \\[1mm]
+\end{monthgrid}
+\vspace{2.2mm}
+\begin{tcolorbox}[colback=footerBg,colframe=footerBg,boxrule=0pt,arc=2pt,left=3mm,right=3mm,top=2mm,bottom=2mm,width=\linewidth]
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{holidayText}\beginR تعطیلات رسمی\endR }\par\vspace{1mm}
+\holidayitem{\beginR ۴ بهمن — ولادت امام زمان (عج) - نیمه شعبان\endR }
+\holidayitem{\beginR ۲۲ بهمن — پیروزی انقلاب اسلامی ایران\endR }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{accentGold}\beginR رویدادها و مناسبت‌ها\endR }\par\vspace{1mm}
+\eventitem{\beginR ۱ بهمن — آغاز دهه مبارک فجر\endR }
+\end{minipage}
+\end{tcolorbox}
+\end{calendarpage}
+
+
+%%============================================================
+%% Esfand
+%%============================================================
+\begin{calendarpage}{12-Esfand.jpg}{\beginR اسفند\endR }{۱۲}{20 Feb 2027 \textendash\ 20 Mar 2027}
+\begin{monthgrid}
+\headercell{\beginR جمعه\endR } & \headercell{\beginR پنج‌شنبه\endR } & \headercell{\beginR چهارشنبه\endR } & \headercell{\beginR سه‌شنبه\endR } & \headercell{\beginR دوشنبه\endR } & \headercell{\beginR یک‌شنبه\endR } & \headercell{\beginR شنبه\endR } \\ \hline
+\fridaycell{۷}{26} & \normalcell{۶}{25} & \normalcell{۵}{24} & \normalcell{۴}{23} & \normalcell{۳}{22} & \normalcell{۲}{21} & \normalcell{۱}{20} \\[1mm]
+\fridaycell{۱۴}{5} & \normalcell{۱۳}{4} & \normalcell{۱۲}{3} & \normalcell{۱۱}{2} & \normalcell{۱۰}{1} & \holidaycell{۹}{28} & \normalcell{۸}{27} \\[1mm]
+\fridaycell{۲۱}{12} & \holidaycell{۲۰}{11} & \holidaycell{۱۹}{10} & \normalcell{۱۸}{9} & \normalcell{۱۷}{8} & \normalcell{۱۶}{7} & \normalcell{۱۵}{6} \\[1mm]
+\fridaycell{۲۸}{19} & \normalcell{۲۷}{18} & \normalcell{۲۶}{17} & \normalcell{۲۵}{16} & \normalcell{۲۴}{15} & \normalcell{۲۳}{14} & \normalcell{۲۲}{13} \\[1mm]
+\emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \emptycell{} & \holidaycell{۲۹}{20} \\[1mm]
+\end{monthgrid}
+\vspace{2.2mm}
+\begin{tcolorbox}[colback=footerBg,colframe=footerBg,boxrule=0pt,arc=2pt,left=3mm,right=3mm,top=2mm,bottom=2mm,width=\linewidth]
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{holidayText}\beginR تعطیلات رسمی\endR }\par\vspace{1mm}
+\holidayitem{\beginR ۹ اسفند — شهادت امام علی (ع)\endR }
+\holidayitem{\beginR ۱۹ اسفند — عید سعید فطر\endR }
+\holidayitem{\beginR ۲۰ اسفند — تعطیل به مناسبت عید فطر\endR }
+\holidayitem{\beginR ۲۹ اسفند — ملی‌شدن صنعت نفت ایران\endR }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+{\small\bfseries\color{accentGold}\beginR رویدادها و مناسبت‌ها\endR }\par\vspace{1mm}
+\eventitem{\beginR ۵ اسفند — روز مهندسی\endR }
+\eventitem{\beginR ۱۵ اسفند — روز درختکاری\endR }
+\eventitem{\beginR ۲۵ اسفند — بزرگداشت پروین اعتصامی\endR }
+\end{minipage}
+\end{tcolorbox}
+\end{calendarpage}
+
+
+\end{document}
