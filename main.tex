@@ -1,4 +1,5 @@
 
+% این فایل به‌صورت خودکار توسط build_tex.py تولید شده است؛ تغییرات قالب را در همان فایل اعمال کنید.
 \documentclass[10pt]{article}
 \usepackage{fontspec}
 \usepackage{xepersian}
@@ -39,7 +40,7 @@
     \coordinate (heroSW) at ([yshift=-\heroheight]current page.north west);
     \coordinate (heroSE) at ([yshift=-\heroheight]current page.north east);
     \path[clip] (heroNW) rectangle (heroSE);
-    \node[anchor=center,inner sep=0] at ([yshift=-0.5\heroheight]current page.north) {\includegraphics[width=\paperwidth]{photos/#1}};
+    \node[anchor=center,inner sep=0] at ([yshift=-0.5\heroheight]current page.north) {\includegraphics[width=\paperwidth,height=\heroheight,keepaspectratio]{photos/#1}};
     \fill[bannerDark,opacity=0.68] (heroSW) rectangle ([yshift=2.15cm]heroSE);
     \draw[accentGold,line width=0.9pt] ([yshift=2.15cm]heroSW) -- ([yshift=2.15cm]heroSE);
     \node[anchor=south west,text=white,inner sep=0] at ([xshift=9mm,yshift=0.68cm]heroSW) {\titlefont\fontsize{36}{40}\selectfont #2};
