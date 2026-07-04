@@ -13,8 +13,8 @@ GREG_MONTHS_FA_ABBR = ["مارس","آوریل","مه","ژوئن","ژوئیه","�
 GREG_MONTHS_EN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 
 def rtl(text):
-    """Wrap a Persian phrase for correct bidi rendering."""
-    return r"\beginR " + text + r"\endR "
+    """Return Persian text for xepersian-managed RTL rendering."""
+    return text
 
 def greg_range_str(gf, gl):
     def fmt(g):
@@ -86,7 +86,7 @@ def build_month_page(m):
         event_items.append(r"\eventitem{" + rtl(full) + "}")
 
     holiday_list = "\n".join(holiday_items) if holiday_items else (r"\noholidaynote{}")
-    event_list = "\n".join(event_items) if event_items else r"{\small\color{gray!60}\beginR ---\endR}"
+    event_list = "\n".join(event_items) if event_items else r"{\small\color{gray!60}---}"
 
     greg_range = greg_range_str(gf, gl)
 
@@ -118,7 +118,11 @@ def build_month_page(m):
 PREAMBLE = r"""
 \documentclass[10pt]{article}
 \usepackage{fontspec}
-\usepackage[a4paper,margin=9mm,top=0mm,headheight=0mm]{geometry}
+\usepackage{xepersian}
+\settextfont{FreeSerif}
+\setlatintextfont{FreeSerif}
+\newfontfamily\titlefont{FreeSerif}
+\usepackage[a4paper,margin=5mm,top=0mm,headheight=0mm]{geometry}
 \usepackage{tikz}
 \usepackage[table]{xcolor}
 \usepackage{graphicx}
@@ -126,10 +130,6 @@ PREAMBLE = r"""
 \usepackage{array}
 \usepackage[most]{tcolorbox}
 \usetikzlibrary{calc}
-
-\setmainfont{FreeSerif}
-\newfontfamily\titlefont{FreeSerif}
-\TeXXeTstate=1
 
 \definecolor{holidayBg}{RGB}{255,214,222}
 \definecolor{holidayText}{RGB}{176,32,60}
@@ -149,16 +149,21 @@ PREAMBLE = r"""
 \newenvironment{calendarpage}[4]{%
   \clearpage
   \noindent
-  \begin{tikzpicture}[remember picture]
-    \useasboundingbox (0,0) rectangle (\linewidth,7.6cm);
-    \clip (0,0) rectangle (\linewidth,7.6cm);
-    \node[anchor=center,inner sep=0] at ($(\linewidth/2,3.8cm)$) {\includegraphics[width=\linewidth]{photos/#1}};
-    \fill[bannerDark,opacity=0.68] (0,0) rectangle (\linewidth,1.85cm);
-    \draw[accentGold,line width=0.9pt] (0,1.85cm) -- (\linewidth,1.85cm);
-    \node[anchor=south west,text=white,inner sep=0] at (0.35cm,0.55cm) {\titlefont\fontsize{30}{34}\selectfont #2};
-    \node[anchor=south east,text=accentGold,inner sep=0] at ($(\linewidth-0.35cm,0.62cm)$) {\fontsize{11}{13}\selectfont #4};
-    \node[anchor=north west,text=accentGold,inner sep=0] at (0.35cm,7.35cm) {\fontsize{13}{15}\selectfont \beginR تقویم سال ۱۴۰۵\endR};
-  \end{tikzpicture}\\[2mm]
+  \begin{tikzpicture}[remember picture,overlay]
+    \def\heroheight{11cm}
+    \coordinate (heroNW) at (current page.north west);
+    \coordinate (heroNE) at (current page.north east);
+    \coordinate (heroSW) at ([yshift=-\heroheight]current page.north west);
+    \coordinate (heroSE) at ([yshift=-\heroheight]current page.north east);
+    \path[clip] (heroNW) rectangle (heroSE);
+    \node[anchor=center,inner sep=0] at ([yshift=-0.5\heroheight]current page.north) {\includegraphics[width=\paperwidth]{photos/#1}};
+    \fill[bannerDark,opacity=0.68] (heroSW) rectangle ([yshift=2.15cm]heroSE);
+    \draw[accentGold,line width=0.9pt] ([yshift=2.15cm]heroSW) -- ([yshift=2.15cm]heroSE);
+    \node[anchor=south west,text=white,inner sep=0] at ([xshift=9mm,yshift=0.68cm]heroSW) {\titlefont\fontsize{36}{40}\selectfont #2};
+    \node[anchor=south east,text=accentGold,inner sep=0] at ([xshift=-9mm,yshift=0.78cm]heroSE) {\fontsize{12}{14}\selectfont #4};
+    \node[anchor=north west,text=accentGold,inner sep=0] at ([xshift=9mm,yshift=-5mm]heroNW) {\fontsize{14}{16}\selectfont تقویم سال ۱۴۰۵};
+  \end{tikzpicture}%
+  \vspace*{11.2cm}
 }{%
 }
 
@@ -172,7 +177,7 @@ PREAMBLE = r"""
 \newenvironment{monthgrid}{%
   \renewcommand{\arraystretch}{1.15}
   \setlength{\tabcolsep}{2pt}
-  \begin{tabular}{|*{7}{>{\centering\arraybackslash}p{2.52cm}|}}
+  \begin{tabular}{|*{7}{>{\centering\arraybackslash}p{2.75cm}|}}
   \hline
 }{%
   \hline
@@ -181,7 +186,7 @@ PREAMBLE = r"""
 
 \newcommand{\holidayitem}[1]{{\small\textcolor{holidayText}{\textbullet}\ \textcolor{normalText}{\small #1}}\par\vspace{0.6mm}}
 \newcommand{\eventitem}[1]{{\small\textcolor{accentGold}{\textbullet}\ \textcolor{normalText}{\small #1}}\par\vspace{0.6mm}}
-\newcommand{\noholidaynote}[1]{{\small\color{gray} }\beginR این ماه فاقد تعطیلی رسمی است.\endR }
+\newcommand{\noholidaynote}[1]{{\small\color{gray} این ماه فاقد تعطیلی رسمی است.}}
 
 \begin{document}
 """
@@ -195,7 +200,7 @@ def main():
     for m in range(1, 13):
         parts.append(build_month_page(m))
     parts.append(POSTAMBLE)
-    with open('/home/claude/work/calendar1405/main.tex', 'w', encoding='utf-8') as f:
+    with open('main.tex', 'w', encoding='utf-8') as f:
         f.write("\n".join(parts))
 
 if __name__ == "__main__":
